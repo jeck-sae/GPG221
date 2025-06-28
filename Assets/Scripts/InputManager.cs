@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class InputManager : MonoBehaviour
 {
     public static Tile SelectedTile { get; private set; }
 
-    private void Update()
+    
+    public IEnumerator CheckInput()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -20,10 +23,13 @@ public class InputManager : MonoBehaviour
             
             if (SelectedTile?.Unit && SelectedTile.Unit.team == 0)
             {
-                if(hovering)
-                    SelectedTile.Unit.MoveTo(hovering);
+                if (hovering)
+                {
+                    yield return SelectedTile.Unit.WalkTo(hovering);
+                    GameManager.Instance.EndTurn();
+                }
                 
-                return;
+                yield break;
             }
 
             if (hovering && SelectedTile != hovering)
