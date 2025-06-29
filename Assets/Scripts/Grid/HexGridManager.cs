@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -34,6 +35,7 @@ public class HexGridManager : Singleton<HexGridManager>
     {
         return grid.GetValueOrDefault(position, null);
     }
+    public List<Tile> GetAll() => grid.Values.ToList();
 
     
     public bool TryGetTile(Vector3Int position, out Tile tile)

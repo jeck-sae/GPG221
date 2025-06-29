@@ -3,12 +3,13 @@ using UnityEngine.Serialization;
 
 public class Tile : MonoBehaviour
 {
-    [FormerlySerializedAs("position")] public Vector3Int Position;
+    public Vector3Int Position;
+    public bool canWalkOn;
+    public Unit Unit { get; private set; }
 
-    public bool IsWalkable;
     public TileGfx Gfx { get; private set; }
     
-    public Unit Unit { get; private set; }
+    public bool IsWalkable => canWalkOn && !Unit;
 
     public void SetUnit(Unit unit)
     {

@@ -5,22 +5,20 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     bool endTurn = false;
-    private InputManager input;
     public void EndTurn() => endTurn = true;
 
     private void Start()
     {
-        input = FindAnyObjectByType<InputManager>();
         StartCoroutine(GameLoop());
     }
 
-    IEnumerator GameLoop()
+    private IEnumerator GameLoop()
     {
         while (true)
         {
             while (!endTurn)
             {
-                yield return input.CheckInput();
+                yield return InputManager.Instance.CheckInput();
             }
 
             endTurn = false;

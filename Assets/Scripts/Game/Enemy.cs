@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine;
 
 public class Enemy : Unit
 {
@@ -9,7 +10,7 @@ public class Enemy : Unit
         var target = FindAnyObjectByType<Player>();
         
         var fullPath = Pathfinder.FindPath(HexGridManager.Instance, CurrentTile, target.CurrentTile);
-        var path = fullPath.GetRange(0, walkDistance + 1);
+        var path = fullPath.GetRange(0, Mathf.Min(walkDistance + 1, fullPath.Count));
         
         yield return FollowPath(path);
     }

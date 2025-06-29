@@ -3,18 +3,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
     public static Tile SelectedTile { get; private set; }
 
     
     public IEnumerator CheckInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TurnManager.Instance.EndTurn();
-        }
-        
         if (Input.GetMouseButtonDown(0))
         {
             var cursorPos = Helpers.Camera.ScreenToWorldPoint(Input.mousePosition);

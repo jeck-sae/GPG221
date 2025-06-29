@@ -5,19 +5,21 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(FollowPathMovement))]
 public abstract class Unit : MonoBehaviour
 {
-    public Tile CurrentTile { get; protected set; }
-
-    public Vector3Int Position => CurrentTile.Position;
-
-    public int team;
-
     public static List<Unit> AllUnits { get; private set; } = new();
 
+    public Tile CurrentTile { get; protected set; }
+    public Vector3Int Position => CurrentTile.Position;
+    public int team;
+    
+    private FollowPathMovement movement;
+    
     private void Awake()
     {
         AllUnits.Add(this);
+        movement = GetComponent<FollowPathMovement>();
     }
 
     private void Start()
@@ -30,8 +32,13 @@ public abstract class Unit : MonoBehaviour
         AllUnits.Remove(this);
     }
 
-    public void SetTile(Tile tile)
+    private void SetTile(Tile tile)
     {
+        if (!tile)
+        {
+            Debug.LogError("Tile is null", gameObject);
+            return;
+        }
         if (CurrentTile?.Unit == this)
             CurrentTile.SetUnit(null);
         CurrentTile = tile;
@@ -47,8 +54,7 @@ public abstract class Unit : MonoBehaviour
 
     public IEnumerator FollowPath(List<Tile> path)
     {
-        var movement = GetComponent<FollowPathMovement>();
-        yield return movement.FollowPath(path, 1);
+        yield return movement.FollowPath(path, 3);
         SetTile(path.LastOrDefault());
     }
 }

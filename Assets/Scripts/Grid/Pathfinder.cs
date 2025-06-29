@@ -1,44 +1,43 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Pathfinder
+public static class Pathfinder
 {
     public static List<Tile> FindPath(HexGridManager grid, Tile start, Tile end)
     {
-        Dictionary<Tile, PathfinderHexTile> tileData = new ();
-        Heap<PathfinderHexTile> openSet = new (grid.Count);
+        Dictionary<Tile, PathfinderTileData> tileData = new ();
+        Heap<PathfinderTileData> openSet = new (grid.Count);
         HashSet<Tile> closedSet = new();
         
-        tileData.Add(start, new PathfinderHexTile(start, 0, GetDistance(start, end), null));
+        tileData.Add(start, new PathfinderTileData(start, 0, GetDistance(start, end), null));
         openSet.Add(tileData[start]);
         
         while (openSet.Count > 0)
         {
             var currentTile = openSet.RemoveFirst();
-            closedSet.Add(currentTile.original);
+            closedSet.Add(currentTile.Original);
             
-            if (currentTile.original == end)
+            if (currentTile.Original == end)
                 return RetracePath(tileData[start], currentTile);
 
-            foreach (Tile neighbour in grid.GetNeighbours(currentTile.original.Position))
+            foreach (Tile neighbour in grid.GetNeighbours(currentTile.Original.Position))
             {
-                if(!neighbour || !neighbour.IsWalkable || closedSet.Contains(neighbour))
+                if(!neighbour || (!neighbour.IsWalkable && neighbour != end) || closedSet.Contains(neighbour))
                     continue;
-                int newMovementCostToNeighbour = currentTile.gCost + GetDistance(neighbour, end);
+                int newMovementCostToNeighbour = currentTile.GCost + GetDistance(neighbour, end);
 
                 if (!tileData.ContainsKey(neighbour))
                 {
-                    var neighbourData = new PathfinderHexTile(neighbour, newMovementCostToNeighbour,
+                    var neighbourData = new PathfinderTileData(neighbour, newMovementCostToNeighbour,
                         GetDistance(neighbour, end), currentTile);
                     tileData.Add(neighbour, neighbourData);
                     openSet.Add(neighbourData);
                 }
 
-                if (newMovementCostToNeighbour < tileData[neighbour].gCost)
+                if (newMovementCostToNeighbour < tileData[neighbour].GCost)
                 {
-                    tileData[neighbour].gCost = newMovementCostToNeighbour;
-                    tileData[neighbour].parent = currentTile;
+                    tileData[neighbour].GCost = newMovementCostToNeighbour;
+                    tileData[neighbour].Parent = currentTile;
                 }
             }
         }
@@ -46,17 +45,17 @@ public class Pathfinder
         return new List<Tile>() { start };
     }
 
-    private static List<Tile> RetracePath(PathfinderHexTile startTile, PathfinderHexTile endTile)
+    private static List<Tile> RetracePath(PathfinderTileData startTile, PathfinderTileData endTile)
     {
             List<Tile> path = new List<Tile>();
-            PathfinderHexTile currentTile = endTile;
+            PathfinderTileData currentTile = endTile;
     
             while (currentTile != startTile)
             {
-                path.Add(currentTile.original);
-                currentTile = currentTile.parent;
+                path.Add(currentTile.Original);
+                currentTile = currentTile.Parent;
             }
-            path.Add(startTile.original);
+            path.Add(startTile.Original);
             path.Reverse();
             return path;
     }
@@ -67,29 +66,29 @@ public class Pathfinder
     }
 
 
-    class PathfinderHexTile : IHeapItem<PathfinderHexTile>
+    class PathfinderTileData : IHeapItem<PathfinderTileData>
     {
         public int HeapIndex { get; set; }
-        public int gCost;
-        public int hCost;
-        public int fCost => gCost + hCost;
+        public int GCost;
+        public int HCost;
+        public int FCost => GCost + HCost;
 
-        public Tile original;
-        public PathfinderHexTile parent;
+        public readonly Tile Original;
+        public PathfinderTileData Parent;
 
-        public PathfinderHexTile(Tile tile, int gCost, int hCost, PathfinderHexTile parent)
+        public PathfinderTileData(Tile tile, int gCost, int hCost, PathfinderTileData parent)
         {
-            original = tile;
-            this.gCost = gCost;
-            this.hCost = hCost;
-            this.parent = parent;
+            Original = tile;
+            this.GCost = gCost;
+            this.HCost = hCost;
+            this.Parent = parent;
         }
         
-        public int CompareTo(PathfinderHexTile other)
+        public int CompareTo(PathfinderTileData other)
         {
-            int compare = fCost.CompareTo(other.fCost);
+            int compare = FCost.CompareTo(other.FCost);
             if (compare == 0)
-                compare = hCost.CompareTo(other.hCost);
+                compare = HCost.CompareTo(other.HCost);
             return -compare;
         }
     }

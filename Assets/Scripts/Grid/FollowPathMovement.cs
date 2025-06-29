@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
 
 public class FollowPathMovement : MonoBehaviour
 {
@@ -11,11 +9,11 @@ public class FollowPathMovement : MonoBehaviour
         if(path?.Count <= 0 || speed <= 0)
             yield break;
 
-        foreach (var tile in path)
-        {
-            tile.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.Range(0, 1f),UnityEngine.Random.Range(0, 1f),UnityEngine.Random.Range(0, 1f));
-        }
-        
+        //debug
+        if (Input.GetKey(KeyCode.Space))
+            foreach (var tile in path)
+                tile.GetComponent<SpriteRenderer>().color = new Color(UnityEngine.Random.Range(0, 1f),UnityEngine.Random.Range(0, 1f),UnityEngine.Random.Range(0, 1f));
+
         int currentTileIndex = 0;
         Vector3 nextTargetPosition = path[0].transform.position;
         
@@ -37,8 +35,6 @@ public class FollowPathMovement : MonoBehaviour
             if (moveBy >= distance)
             {
                 transform.position = nextTargetPosition;
-                
-                moveBy -= distance;
                 currentTileIndex++;
 
                 if (path.Count <= currentTileIndex)
@@ -46,7 +42,7 @@ public class FollowPathMovement : MonoBehaviour
 
                 nextTargetPosition = path[currentTileIndex].transform.position;
 
-                Move(moveBy);
+                Move(moveBy - distance);
                 return;
             }
 

@@ -27,15 +27,6 @@ public class TileDisplayManager : MonoBehaviour
     List<Tile> cachedAttackableTiles = new();
     List<Tile> cachedPath = new();
 
-    private void OnEnable()
-    {
-        TurnManager.Instance.OnTurnEnd += ForceUpdateTilesNextFrame;
-    }
-    private void OnDisable()
-    {
-        if (TurnManager.Instance)
-            TurnManager.Instance.OnTurnEnd -= ForceUpdateTilesNextFrame;
-    }
     public void ForceUpdateTilesNextFrame() => forceUpdateTiles = true;
 
     private void Update()
