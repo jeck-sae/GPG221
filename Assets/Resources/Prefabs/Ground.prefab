@@ -49,6 +49,10 @@ PrefabInstance:
       value: 0.25882354
       objectReference: {fileID: 0}
     - target: {fileID: 8360872869074244843, guid: 6f4cf54858012fc4b9d962526ff5983f, type: 3}
+      propertyPath: walkable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8360872869074244843, guid: 6f4cf54858012fc4b9d962526ff5983f, type: 3}
       propertyPath: canWalkOn
       value: 1
       objectReference: {fileID: 0}

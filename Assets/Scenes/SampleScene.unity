@@ -571,6 +571,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 0
+  attackRange: 0
+  moveRange: 0
 --- !u!114 &1256157006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,6 +597,8 @@ GameObject:
   - component: {fileID: 1310514954}
   - component: {fileID: 1310514953}
   - component: {fileID: 1310514952}
+  - component: {fileID: 1310514957}
+  - component: {fileID: 1310514956}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -627,6 +631,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 1
+  attackRange: 2
+  moveRange: 2
   walkDistance: 2
 --- !u!212 &1310514954
 SpriteRenderer:
@@ -692,12 +698,38 @@ Transform:
   m_GameObject: {fileID: 1310514951}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: -1, z: 0}
+  m_LocalPosition: {x: -6, y: -2, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1310514956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310514951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2114ab6ff8c93f042959d5d728099157, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priorityMultiplier: 1
+  checkRange: 5
+--- !u!114 &1310514957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310514951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28db378e5b7ea284d81d8502cf50e1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1828088624
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,6 +742,8 @@ GameObject:
   - component: {fileID: 1828088627}
   - component: {fileID: 1828088626}
   - component: {fileID: 1828088625}
+  - component: {fileID: 1828088631}
+  - component: {fileID: 1828088630}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Untagged
@@ -742,6 +776,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 1
+  attackRange: 2
+  moveRange: 2
   walkDistance: 2
 --- !u!212 &1828088627
 SpriteRenderer:
@@ -813,6 +849,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1828088630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828088624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2114ab6ff8c93f042959d5d728099157, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priorityMultiplier: 1
+  checkRange: 5
+--- !u!114 &1828088631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828088624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28db378e5b7ea284d81d8502cf50e1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1853929707
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,7 +886,6 @@ GameObject:
   - component: {fileID: 1853929709}
   - component: {fileID: 1853929708}
   - component: {fileID: 1853929710}
-  - component: {fileID: 1853929711}
   - component: {fileID: 1853929712}
   m_Layer: 0
   m_Name: GameManager
@@ -872,19 +933,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c0a2f0b107e5645ad7fa145ed6ae3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1853929711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853929707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 201ae0b4da414ad4faf1f53fdad6ce6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentTurn: 0
 --- !u!114 &1853929712
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,33 +3,34 @@ using UnityEngine;
 
 public static class Pathfinder
 {
-    public static List<Tile> FindPath(HexGridManager grid, Tile start, Tile end)
+    public static List<Tile> FindPath(HexGridManager grid, Tile start, Tile end, bool includeStartTile = false, int targetDistanceFromEnd = 1)
     {
         Dictionary<Tile, PathfinderTileData> tileData = new ();
         Heap<PathfinderTileData> openSet = new (grid.Count);
         HashSet<Tile> closedSet = new();
         
-        tileData.Add(start, new PathfinderTileData(start, 0, GetDistance(start, end), null));
+        tileData.Add(start, new PathfinderTileData(start, 0, HexUtils.Distance(start.Position, end.Position), null));
         openSet.Add(tileData[start]);
         
         while (openSet.Count > 0)
         {
             var currentTile = openSet.RemoveFirst();
             closedSet.Add(currentTile.Original);
-            
-            if (currentTile.Original == end)
-                return RetracePath(tileData[start], currentTile);
+
+            if (HexUtils.Distance(currentTile.Original.Position, end.Position) <= targetDistanceFromEnd)
+                if (currentTile.Original.CanStandOn)
+                    return RetracePath(currentTile, includeStartTile);
 
             foreach (Tile neighbour in grid.GetNeighbours(currentTile.Original.Position))
             {
-                if(!neighbour || (!neighbour.IsWalkable && neighbour != end) || closedSet.Contains(neighbour))
+                if(!neighbour || !neighbour.CanWalkOn || closedSet.Contains(neighbour))
                     continue;
-                int newMovementCostToNeighbour = currentTile.GCost + GetDistance(neighbour, end);
+                int newMovementCostToNeighbour = currentTile.GCost + HexUtils.Distance(neighbour.Position, end.Position);
 
                 if (!tileData.ContainsKey(neighbour))
                 {
                     var neighbourData = new PathfinderTileData(neighbour, newMovementCostToNeighbour,
-                        GetDistance(neighbour, end), currentTile);
+                        HexUtils.Distance(neighbour.Position, end.Position), currentTile);
                     tileData.Add(neighbour, neighbourData);
                     openSet.Add(neighbourData);
                 }
@@ -45,25 +46,26 @@ public static class Pathfinder
         return new List<Tile>() { start };
     }
 
-    private static List<Tile> RetracePath(PathfinderTileData startTile, PathfinderTileData endTile)
+    private static List<Tile> RetracePath(PathfinderTileData endTile, bool includeStartTile)
     {
             List<Tile> path = new List<Tile>();
             PathfinderTileData currentTile = endTile;
     
-            while (currentTile != startTile)
+            while (currentTile.Parent != null)
             {
                 path.Add(currentTile.Original);
                 currentTile = currentTile.Parent;
             }
-            path.Add(startTile.Original);
+            if (includeStartTile)
+                path.Add(currentTile.Original);
             path.Reverse();
             return path;
     }
 
-    private static int GetDistance(Tile start, Tile end)
+    /*private static int GetDistance(Tile start, Tile end)
     {
         return (int)Vector2.Distance(HexUtils.HexToWorldPosition(start.Position), HexUtils.HexToWorldPosition(end.Position));
-    }
+    }*/
 
 
     class PathfinderTileData : IHeapItem<PathfinderTileData>

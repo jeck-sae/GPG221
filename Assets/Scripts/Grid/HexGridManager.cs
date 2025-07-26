@@ -29,12 +29,10 @@ public class HexGridManager : Singleton<HexGridManager>
         grid.Add(position, newTile);
     }
 
-    public Tile GetNearestTile(Vector3 worldPosition)
+    public Tile FromWorldCoordinate(Vector3 worldPosition)
         => GetTile(HexUtils.WorldToHexPosition(worldPosition));
     public Tile GetTile(Vector3Int position)
-    {
-        return grid.GetValueOrDefault(position, null);
-    }
+        => grid.GetValueOrDefault(position, null);
     public List<Tile> GetAll() => grid.Values.ToList();
 
     
@@ -51,6 +49,16 @@ public class HexGridManager : Singleton<HexGridManager>
                 neighbours.Add(tile);
         return neighbours;
     }
-    
-    
+
+    public List<Tile> GetTilesInRange(Vector3Int center, int range)
+    {
+        List<Tile> result = new();
+
+        for (int q = -range; q <= range; q++)
+            for (int r = Mathf.Max(-range, -q - range); r < Mathf.Min(range, -q + range); r++)
+                if(TryGetTile(new Vector3Int(center.x + q, center.y + r, center.z - q - r),  out Tile tile))
+                    result.Add(tile);
+        
+        return result;
+    }
 }

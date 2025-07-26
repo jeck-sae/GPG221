@@ -32,7 +32,7 @@ public class DebugShortcuts : MonoBehaviour
         {
             HexGridManager.Instance.GetAll().ForEach((x) =>
             {
-                Gizmos.color = x.IsWalkable ? Color.greenYellow : Color.brown;
+                Gizmos.color = x.CanWalkOn ? Color.greenYellow : Color.brown;
                 Gizmos.DrawWireSphere(x.transform.position, 0.2f);
             });
         }

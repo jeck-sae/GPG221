@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,9 +11,11 @@ public abstract class Unit : MonoBehaviour
 {
     public static List<Unit> AllUnits { get; private set; } = new();
 
-    public Tile CurrentTile { get; protected set; }
+    [ShowInInspector, ReadOnly] public Tile CurrentTile { get; protected set; }
     public Vector3Int Position => CurrentTile.Position;
     public int team;
+    public int attackRange;
+    public int moveRange;
     
     private FollowPathMovement movement;
     
@@ -21,10 +24,10 @@ public abstract class Unit : MonoBehaviour
         AllUnits.Add(this);
         movement = GetComponent<FollowPathMovement>();
     }
-
+    
     private void Start()
     {
-        SetTile(HexGridManager.Instance.GetNearestTile(transform.position));
+        SetTile(HexGridManager.Instance.FromWorldCoordinate(transform.position));
     }
 
     private void OnDestroy()
@@ -48,7 +51,7 @@ public abstract class Unit : MonoBehaviour
 
     public IEnumerator WalkTo(Tile tile)
     {
-        var path = Pathfinder.FindPath(HexGridManager.Instance, CurrentTile, tile);
+        var path = Pathfinder.FindPath(HexGridManager.Instance, CurrentTile, tile, true, 0);
         yield return FollowPath(path);
     }
 

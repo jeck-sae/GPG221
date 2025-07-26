@@ -7,6 +7,9 @@ public class Enemy : Unit
 
     public IEnumerator PlayTurn()
     {
+        yield return GetComponent<StateManager>().TakeTurn();
+
+        yield break;
         var target = FindAnyObjectByType<Player>();
         
         var fullPath = Pathfinder.FindPath(HexGridManager.Instance, CurrentTile, target.CurrentTile);

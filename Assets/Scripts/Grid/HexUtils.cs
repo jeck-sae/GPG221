@@ -47,4 +47,13 @@ public static class HexUtils
 
         return new Vector3Int(q, r, s);
     }
+
+    public static int Distance(Vector3Int a, Vector3Int b)
+    {
+        var diff = a - b;
+        return Mathf.Max(
+            Mathf.Abs(diff.x), 
+            Mathf.Abs(diff.y),
+            Mathf.Abs(diff.z));
+    }
 }
