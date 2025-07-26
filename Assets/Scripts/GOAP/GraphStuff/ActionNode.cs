@@ -1,14 +1,29 @@
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ActionNode : GoapNode
 {
-    [SerializeField] GoapAction action;
-    public ActionNode()
+    
+    public GoapAction action;
+    public ActionNode() : base()
     {
+        Color color = Color.forestGreen;
+        float width = 1.5f;
+        float radius = 8;
         
+        style.borderBottomColor = color;
+        style.borderTopColor = color;
+        style.borderLeftColor = color;
+        style.borderRightColor = color;
+        style.borderLeftWidth = width;
+        style.borderRightWidth = width;
+        style.borderBottomWidth = width;
+        style.borderTopWidth = width;
+        style.borderBottomLeftRadius = radius;
+        style.borderBottomRightRadius = radius;
+        style.borderTopLeftRadius = radius;
+        style.borderTopRightRadius = radius;
+        RefreshExpandedState();
     }
 
 }

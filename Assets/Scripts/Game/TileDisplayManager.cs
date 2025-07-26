@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class TileDisplayManager : MonoBehaviour
 {
+    /*
     [SerializeField] Color SelectedTileColor;
     [SerializeField] Color movementRangeColor;
     [SerializeField] Color movementRangeNoMovesColor;
@@ -29,13 +30,14 @@ public class TileDisplayManager : MonoBehaviour
 
     public void ForceUpdateTilesNextFrame() => forceUpdateTiles = true;
 
+    
     private void Update()
     {
-        /*Unit selectedUnit = InputManager.SelectedTile.Unit;
+        Unit selectedUnit = InputManager.SelectedTile.Unit;
         changedSelectedTile = lastSelectedTile != selectedUnit?.CurrentTile;
         lastSelectedTile = selectedUnit?.CurrentTile;
         
-        Tile hovering = Helpers.IsOverUI ? null : HexGridManager.Instance.GetTile(Helpers.Camera.ScreenToWorldPoint(Input.mousePosition));
+        Tile hovering = Helpers.IsOverUI ? null : HexGridManager.Instance.HoveringTile;
         changedHoveringTile = hoveredTileLastFrame != hovering;
         hoveredTileLastFrame = hovering;
 
@@ -43,7 +45,7 @@ public class TileDisplayManager : MonoBehaviour
             return;
         forceUpdateTiles = false;
 
-        if (changedSelectedTile && selectedUnit?.currentTile)
+        if (changedSelectedTile && selectedUnit?.CurrentTile)
             cachedWalkableTiles = selectedUnit.GetWalkableTiles();
         
         GridManager.Instance.GetAll().ForEach(x => x.Value.gfx.ResetGraphics());
@@ -51,11 +53,10 @@ public class TileDisplayManager : MonoBehaviour
         ColorUnits();
 
         if(selectedUnit)
-            PreviewSelecetdUnit(selectedUnit, hovering);*/
+            PreviewSelecetdUnit(selectedUnit, hovering);
 
     }
 
-    /*
     void PreviewSelecetdUnit(Unit selectedUnit, Tile hovering)
     {
         Tile selectedTile = selectedUnit?.currentTile;

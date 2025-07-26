@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class GoapNode : Node
+public abstract class GoapNode : Node
 {
     public string GUID;
-    public string NodeName;
+    public Vector2 position;
 
     public GoapNode()
     {
@@ -16,8 +16,9 @@ public class GoapNode : Node
         style.backgroundColor = new Color(0.2f, 0.2f, 0.25f);
     
         // Add ports
-        var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(float));
+        var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(float));
         inputPort.portName = "In";
+        inputPort.portColor = this is ActionNode ? Color.green : Color.yellow;
         inputContainer.Add(inputPort);
         CreatePort();
         ////////////
@@ -57,7 +58,6 @@ public class GoapNode : Node
     
     
     
-    
     private void CreatePort()
     {
         var port = InstantiatePort(
@@ -66,9 +66,9 @@ public class GoapNode : Node
             Port.Capacity.Single,
             typeof(float)
         );
-    
-        port.portName = "portName";
-        port.portColor = Color.yellow;
+
+        port.portName = this is ActionNode ? "Prerequisite" : "Fallback Action";
+        port.portColor = this is ActionNode ? Color.green : Color.yellow;
         outputContainer.Add(port);
         RefreshPorts();
     }

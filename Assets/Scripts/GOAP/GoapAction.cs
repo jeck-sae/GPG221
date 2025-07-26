@@ -11,7 +11,10 @@ public class GoapAction
 {
     [OdinSerialize] List<Prerequisite> prerequisites;
     [OdinSerialize] Effect effect;
-    
+
+    public GoapAction() { prerequisites = new List<Prerequisite>(); }
+    public GoapAction(Effect effect) : this() { this.effect = effect; }
+
     public bool TryAction()
     {
         bool hasPrerequisites = true;
@@ -30,10 +33,10 @@ public class GoapAction
         return true;
     }
 
-
+    
     public void SetupNode(ActionNode node)
     {
-        node.AddTextField("test", s => Debug.Log(s));
+        node.AddTextField("Action Node", s => Debug.Log(s));
         node.AddToggle("test222", s => Debug.Log(s));
         
         effect.SetupNode(node);
@@ -48,6 +51,11 @@ public class Prerequisite
     
     [SerializeReference]
     public List<GoapAction> fallbackActions;
+    
+    
+    public Prerequisite() { fallbackActions = new List<GoapAction>(); }
+    public Prerequisite(Condition condition) : this() { this.condition = condition; }
+
 
     public bool CheckPrerequisite()
     {
@@ -61,41 +69,26 @@ public class Prerequisite
         }
         return false;
     }
-}
 
-[Serializable]
-public class Effect
-{
-    public virtual void DoEffect()
+    public void SetupNode(PrerequisiteNode node)
     {
-        
+        condition.SetupNode(node);
     }
 }
 
 [Serializable]
-public class Condition
+public abstract class Effect
+{
+    public abstract void DoEffect();
+    public abstract void SetupNode(ActionNode node);
+}
+
+[Serializable]
+public abstract class Condition
 {
     public virtual bool CheckCondition()
     {
         return false;
     }
-}
-
-[Serializable]
-public class GetMoneyEffect : Effect
-{
-    public int amount;
-    public override void DoEffect()
-    {
-        //money += amount
-    }
-}
-
-public class MoneyCondition : Condition
-{
-    public int minMoney;
-    public override bool CheckCondition()
-    {
-        return false;
-    }
+    public abstract void SetupNode(PrerequisiteNode node);
 }

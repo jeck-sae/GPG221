@@ -12,8 +12,7 @@ public class InputManager : Singleton<InputManager>
     {
         if (Input.GetMouseButtonDown(0))
         {
-            var cursorPos = Helpers.Camera.ScreenToWorldPoint(Input.mousePosition);
-            var hovering = HexGridManager.Instance.FromWorldCoordinate(cursorPos);
+            var hovering = HexGridManager.instance.HoveringTile;
             
             if (SelectedTile?.Unit && SelectedTile.Unit.team == 0)
             {

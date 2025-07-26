@@ -9,9 +9,32 @@ public class HexGridManager : Singleton<HexGridManager>
     [ShowInInspector]
     private Dictionary<Vector3Int, Tile> grid = new();
     public int Count => grid.Count;
-    
+    public List<Tile> GetAll() => grid.Values.ToList();
+
+    private Tile _hovering;
+    private float _lastHoveringTime;
+    public Tile HoveringTile
+    {
+        get
+        {
+            if (!_lastHoveringTime.Equals(Time.realtimeSinceStartup))
+            {
+                var cursorPos = Helpers.Camera.ScreenToWorldPoint(Input.mousePosition);
+                var hoveringCoords = HexUtils.WorldToHexPosition(cursorPos);
+                _hovering = HexGridManager.Instance.GetTile(hoveringCoords);
+                _lastHoveringTime = Time.realtimeSinceStartup;
+            }
+            return _hovering;
+        }
+    }
+
     public void CreateTile(GameObject original, Vector3Int position)
     {
+        if (position.x + position.y + position.z != 0)
+        {
+            Debug.LogError($"Hex coordinates not valid: [{position.x}, {position.y}, {position.z}]");
+        }
+        
         if (grid.ContainsKey(position))
         {
             Debug.LogWarning($"Tile already exists at coordinates {position} (Tried to create {original.name})");
@@ -33,7 +56,6 @@ public class HexGridManager : Singleton<HexGridManager>
         => GetTile(HexUtils.WorldToHexPosition(worldPosition));
     public Tile GetTile(Vector3Int position)
         => grid.GetValueOrDefault(position, null);
-    public List<Tile> GetAll() => grid.Values.ToList();
 
     
     public bool TryGetTile(Vector3Int position, out Tile tile)
