@@ -22,91 +22,74 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   goapNodes:
+  - type: 1
+    position: {x: 289, y: 162}
+    GUID: 31cb7082-e2e6-4186-80df-2788f1d94173
+    connectedNodes:
+    - cdb1a0c9-8643-46ae-9e71-a890e77f03d6
+    action:
+      rid: 8288272090738196759
+    prerequisite:
+      rid: -2
   - type: 0
-    position: {x: 119, y: 149}
-    GUID: e6b3bf68-2fe8-4764-a35d-ee1f221a908e
+    position: {x: 95, y: 162}
+    GUID: 9c049a39-9557-4f7d-9d1d-de9c27299714
     connectedNodes:
-    - 188251ef-d737-4844-bda9-8dc061d29bfd
-    - d24e515c-ab76-4a00-91f8-35baa595aadd
+    - 31cb7082-e2e6-4186-80df-2788f1d94173
     action:
       rid: -2
     prerequisite:
       rid: -2
   - type: 2
-    position: {x: 805, y: 309}
-    GUID: ab7ac7e3-8ab5-4c85-8fb5-bdb8b5d2f408
+    position: {x: 514, y: 162}
+    GUID: cdb1a0c9-8643-46ae-9e71-a890e77f03d6
+    connectedNodes:
+    - 146d7444-4399-4cba-9fd9-f95c14b07397
+    action:
+      rid: -2
+    prerequisite:
+      rid: 8288272090738196760
+  - type: 1
+    position: {x: 747, y: 162}
+    GUID: 146d7444-4399-4cba-9fd9-f95c14b07397
     connectedNodes: []
     action:
-      rid: -2
-    prerequisite:
-      rid: 8288272090738196681
-  - type: 1
-    position: {x: 483, y: 67}
-    GUID: 188251ef-d737-4844-bda9-8dc061d29bfd
-    connectedNodes:
-    - ab7ac7e3-8ab5-4c85-8fb5-bdb8b5d2f408
-    action:
-      rid: 8288272090738196682
+      rid: 8288272090738196761
     prerequisite:
       rid: -2
-  - type: 1
-    position: {x: 406, y: 352}
-    GUID: d24e515c-ab76-4a00-91f8-35baa595aadd
-    connectedNodes:
-    - ab7ac7e3-8ab5-4c85-8fb5-bdb8b5d2f408
-    - cfeda1bb-3fd9-4d41-91e4-9f5a6a52b0f7
-    action:
-      rid: 8288272090738196683
-    prerequisite:
-      rid: -2
-  - type: 2
-    position: {x: 655, y: 543}
-    GUID: cfeda1bb-3fd9-4d41-91e4-9f5a6a52b0f7
-    connectedNodes: []
-    action:
-      rid: -2
-    prerequisite:
-      rid: 8288272090738196684
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 8288272090738196669
+    - rid: 8288272090738196756
       type: {class: ChaseUnitEffect, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 8288272090738196678
+    - rid: 8288272090738196757
       type: {class: MoneyCondition, ns: , asm: Assembly-CSharp}
       data:
-        minMoney: 88
-    - rid: 8288272090738196679
-      type: {class: ChaseUnitEffect, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 8288272090738196680
-      type: {class: MoneyCondition, ns: , asm: Assembly-CSharp}
+        minMoney: 0
+    - rid: 8288272090738196758
+      type: {class: GetMoneyEffect, ns: , asm: Assembly-CSharp}
       data:
-        minMoney: 7
-    - rid: 8288272090738196681
+        amount: 0
+    - rid: 8288272090738196759
+      type: {class: GoapAction, ns: , asm: Assembly-CSharp}
+      data:
+        prerequisites:
+        - rid: 8288272090738196760
+        effect:
+          rid: 8288272090738196758
+    - rid: 8288272090738196760
       type: {class: Prerequisite, ns: , asm: Assembly-CSharp}
       data:
         condition:
-          rid: 8288272090738196678
-        fallbackActions: []
-    - rid: 8288272090738196682
+          rid: 8288272090738196757
+        fallbackActions:
+        - rid: 8288272090738196761
+    - rid: 8288272090738196761
       type: {class: GoapAction, ns: , asm: Assembly-CSharp}
       data:
-        _prerequisites: []
-        _effect:
-          rid: 8288272090738196679
-    - rid: 8288272090738196683
-      type: {class: GoapAction, ns: , asm: Assembly-CSharp}
-      data:
-        _prerequisites: []
-        _effect:
-          rid: 8288272090738196669
-    - rid: 8288272090738196684
-      type: {class: Prerequisite, ns: , asm: Assembly-CSharp}
-      data:
-        condition:
-          rid: 8288272090738196680
-        fallbackActions: []
+        prerequisites: []
+        effect:
+          rid: 8288272090738196756

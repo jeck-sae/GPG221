@@ -1,11 +1,12 @@
-
+using System.Collections;
 using UnityEngine;
 
 public class ChaseUnitEffect : Effect
 {
-    public override void DoEffect()
+    public override IEnumerator DoEffect()
     {
         Debug.Log("Chase");
+        yield break;
     }
 
     public override void SetupNode(GoapNode node)
@@ -20,9 +21,10 @@ public class GetMoneyEffect : Effect
 {
     public int amount;
 
-    public override void DoEffect()
+    public override IEnumerator DoEffect()
     {
         Debug.Log("GetMoney " + amount);
+        yield break;
     }
 
     public override void SetupNode(GoapNode node)

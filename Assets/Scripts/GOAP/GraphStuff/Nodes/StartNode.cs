@@ -17,5 +17,4 @@ public class StartNode : GoapNode
         style.borderLeftColor = color;
         style.borderRightColor = color;
     }
-    
 }

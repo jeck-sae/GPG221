@@ -1,54 +1,65 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 //no world state
 //no easy way to change values (graph?)
 
 [Serializable]
-public class GoapAction : IGoapNode
+public class GoapAction
 {
-    [SerializeReference, ShowInInspector] private List<Prerequisite> _prerequisites;
-    public List<Prerequisite> Prerequisites { get => _prerequisites; protected set => _prerequisites = value; }
-    [SerializeReference, ShowInInspector] private Effect _effect;
-    public Effect Effect { get => _effect; protected set => _effect = value; }
+    [SerializeReference, ShowInInspector] private List<Prerequisite> prerequisites;
+    public List<Prerequisite> Prerequisites
+    {
+        get => prerequisites; 
+        protected set => prerequisites = value;
+    }
     
+    [SerializeReference, ShowInInspector] private Effect effect;
+    public Effect Effect 
+    {
+        get => effect; 
+        protected set => effect = value;
+    }
     
     public GoapAction() { Prerequisites = new List<Prerequisite>(); }
     public GoapAction(Effect effect) : this() { this.Effect = effect; }
 
-    public bool TryAction()
+    
+    public (bool success, Effect nextEffect) GetEffect()
     {
         bool hasPrerequisites = true;
         foreach (var prerequisite in Prerequisites)
         {
-            if (prerequisite.CheckPrerequisite())
+            var result = prerequisite.CheckPrerequisite();
+            if (!result.met)
             {
+                if(result.fallbackEffect != null)
+                    return (false, result.fallbackEffect);
+                
                 hasPrerequisites = false;
             }
         }
         
-        if (!hasPrerequisites)
-            return false;
+        if (!hasPrerequisites) 
+            return (false, null);
         
-        Effect.DoEffect();
-        return true;
+        return (true, Effect);
     }
 
     
     public void SetupNode(GoapNode node)
     {
-        node.AddTextField("Action Node", s => Debug.Log(s));
-        node.AddToggle("test222", s => Debug.Log(s));
-        
         Effect.SetupNode(node);
     }
 }
 
 [Serializable]
-public class Prerequisite : IGoapNode
+public class Prerequisite
 {
     [SerializeReference]
     public Condition condition;
@@ -61,17 +72,19 @@ public class Prerequisite : IGoapNode
     public Prerequisite(Condition condition) : this() { this.condition = condition; }
 
 
-    public bool CheckPrerequisite()
+    public (bool met, Effect fallbackEffect) CheckPrerequisite()
     {
         if (!condition.CheckCondition())
         {
             foreach (var b in fallbackActions)
             {
-                if (b.TryAction())
-                    return true;
+                var result = b.GetEffect();
+                if (result.nextEffect != null)
+                    return (false, result.nextEffect);
             }
+            return (false, null);
         }
-        return false;
+        return (true, null);
     }
 
     public void SetupNode(GoapNode node)
@@ -83,7 +96,7 @@ public class Prerequisite : IGoapNode
 [Serializable]
 public abstract class Effect
 {
-    public abstract void DoEffect();
+    public abstract IEnumerator DoEffect();
     public abstract void SetupNode(GoapNode node);
 }
 

@@ -25,10 +25,6 @@ public abstract class GoapNode : Node
         style.backgroundColor = new Color(0.2f, 0.2f, 0.25f);
         SetPosition(new Rect(transform.position, new Vector2(250, 200)));
         
-        Button addButton = new Button(() => CreatePort()) { text = "Add Output" };
-        Button removeButton = new Button(RemovePort) { text = "Remove Output" };
-        mainContainer.Add(addButton);
-        mainContainer.Add(removeButton);
         
         CreatePort();
         
@@ -46,6 +42,14 @@ public abstract class GoapNode : Node
         RefreshExpandedState();
     }
 
+    protected void CreateAddPortButtons()
+    {
+        Button addButton = new Button(() => CreatePort()) { text = "Add Output" };
+        Button removeButton = new Button(RemovePort) { text = "Remove Output" };
+        mainContainer.Add(addButton);
+        mainContainer.Add(removeButton);
+    }
+    
     protected void AddInputPort()
     {
         var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(float));
@@ -93,7 +97,6 @@ public abstract class GoapNode : Node
         return data;
     }
     
-    
     public Port CreatePort()
     {
         var port = InstantiatePort(
@@ -103,7 +106,7 @@ public abstract class GoapNode : Node
             typeof(float)
         );
 
-        port.portName = outputPortName; //this is ActionNode ? "Prerequisite" : "Fallback Action";
+        port.portName = outputPortName;
         port.portColor = portColor;
         outputContainer.Add(port);
         RefreshPorts();

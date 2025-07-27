@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,10 +11,11 @@ public class PrerequisiteNode : GoapNode
     
     public Prerequisite prerequisite;
 
-    public PrerequisiteNode() : base()
+    public PrerequisiteNode()
     {
         data.type = GoapNodeType.Prerequisite;
         
+        CreateAddPortButtons();
         AddInputPort();
         
         Color color = Color.orange;
@@ -27,6 +30,16 @@ public class PrerequisiteNode : GoapNode
     public override GoapNodeData SaveState()
     {
         data.prerequisite = prerequisite;
+        
+        foreach (var portElement in outputContainer.Children())
+        {
+            if (portElement is not Port port) continue;
+            var connected = port.connections.FirstOrDefault();
+            if (connected?.input.node is not ActionNode node) continue;
+            
+            prerequisite.fallbackActions.Add(node.action);
+        }
+        
         return base.SaveState();
     }
 }
