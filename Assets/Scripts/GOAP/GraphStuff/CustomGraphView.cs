@@ -30,23 +30,22 @@ public class CustomGraphView : GraphView
     {
         if (args.keyCode == KeyCode.Space)
         {
-            //open 
+            //open node list 
         }
-        
     }
     
     private void OnContextMenuPopulate(ContextualMenuPopulateEvent evt)
     {
-        AddActionNode("GetMoney", new GetMoneyEffect());
-        AddActionNode("Chase", new ChaseUnitEffect());
-        AddPrerequisiteNode("MoneyPrerequisite", new MoneyCondition());
+        AddActionNode("GetMoney Action", new GetMoneyEffect());
+        AddActionNode("Chase Action", new ChaseUnitEffect());
+        AddPrerequisiteNode("Money Prerequisite", new MoneyCondition());
         
-
+        
         void AddActionNode(string nodeName, Effect effect)
         {
             evt.menu.AppendAction("Create " + nodeName + " node", a =>
             {
-                var newNode = CreateActionNode(nodeName, a.eventInfo.localMousePosition, effect);
+                var newNode = CreateActionNode(a.eventInfo.localMousePosition, effect);
                 AddElement(newNode);
             });
         }
@@ -54,7 +53,7 @@ public class CustomGraphView : GraphView
         {
             evt.menu.AppendAction("Create " + nodeName + " node", a =>
             {
-                var newNode = CreatePrerequisiteNode(nodeName, a.eventInfo.localMousePosition, condition);
+                var newNode = CreatePrerequisiteNode(a.eventInfo.localMousePosition, condition);
                 AddElement(newNode);
             });
         }
@@ -65,36 +64,36 @@ public class CustomGraphView : GraphView
         return ports.ToList().Where((nap => 
             nap.direction != startPort.direction && 
             ((nap.node is ActionNode && startPort.node is PrerequisiteNode) || 
+             (nap.node is ActionNode && startPort.node is StartNode) || 
              (nap.node is PrerequisiteNode && startPort.node is ActionNode)))).ToList();
     }
 
-    public ActionNode CreateActionNode(string title, Vector2 position, Effect effect)
+    public ActionNode CreateActionNode(Vector2 position, Effect effect)
     {
         var node = new ActionNode();
-        SetupNewNode(node, title, position);
+        node.SetPosition(new Rect(position, position));
+        
         GoapAction action = new GoapAction(effect);
         action.SetupNode(node);
         node.action = action;
         return node;
     }
-    public PrerequisiteNode CreatePrerequisiteNode(string title, Vector2 position, Condition condition)
+
+    public StartNode CreateStartNode(Vector2 position)
+    {
+        StartNode startNode = new StartNode();
+        startNode.SetPosition(new Rect(position, position));
+        AddElement(startNode);
+        return startNode;
+    }
+    public PrerequisiteNode CreatePrerequisiteNode(Vector2 position, Condition condition)
     {
         var node = new PrerequisiteNode();
-        SetupNewNode(node, title, position);
+        node.SetPosition(new Rect(position, position));
+        
         Prerequisite p = new Prerequisite(condition);
         p.SetupNode(node);
         node.prerequisite = p;
         return node;
-    }
-
-    private void SetupNewNode(GoapNode node, string title, Vector2 position)
-    {
-        node.title = title;
-        node.GUID = System.Guid.NewGuid().ToString();
-        
-        node.SetPosition(new Rect(position, position));
-
-        node.RefreshExpandedState();
-        node.RefreshPorts();
     }
 }

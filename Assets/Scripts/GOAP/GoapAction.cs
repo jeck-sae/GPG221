@@ -1,24 +1,28 @@
 using System;
 using System.Collections.Generic;
-using Sirenix.Serialization;
+using Sirenix.OdinInspector;
 using UnityEngine;
+
 
 //no world state
 //no easy way to change values (graph?)
 
 [Serializable]
-public class GoapAction
+public class GoapAction : IGoapNode
 {
-    [OdinSerialize] List<Prerequisite> prerequisites;
-    [OdinSerialize] Effect effect;
-
-    public GoapAction() { prerequisites = new List<Prerequisite>(); }
-    public GoapAction(Effect effect) : this() { this.effect = effect; }
+    [SerializeReference, ShowInInspector] private List<Prerequisite> _prerequisites;
+    public List<Prerequisite> Prerequisites { get => _prerequisites; protected set => _prerequisites = value; }
+    [SerializeReference, ShowInInspector] private Effect _effect;
+    public Effect Effect { get => _effect; protected set => _effect = value; }
+    
+    
+    public GoapAction() { Prerequisites = new List<Prerequisite>(); }
+    public GoapAction(Effect effect) : this() { this.Effect = effect; }
 
     public bool TryAction()
     {
         bool hasPrerequisites = true;
-        foreach (var prerequisite in prerequisites)
+        foreach (var prerequisite in Prerequisites)
         {
             if (prerequisite.CheckPrerequisite())
             {
@@ -29,24 +33,24 @@ public class GoapAction
         if (!hasPrerequisites)
             return false;
         
-        effect.DoEffect();
+        Effect.DoEffect();
         return true;
     }
 
     
-    public void SetupNode(ActionNode node)
+    public void SetupNode(GoapNode node)
     {
         node.AddTextField("Action Node", s => Debug.Log(s));
         node.AddToggle("test222", s => Debug.Log(s));
         
-        effect.SetupNode(node);
+        Effect.SetupNode(node);
     }
 }
 
 [Serializable]
-public class Prerequisite
+public class Prerequisite : IGoapNode
 {
-    [OdinSerialize]
+    [SerializeReference]
     public Condition condition;
     
     [SerializeReference]
@@ -70,7 +74,7 @@ public class Prerequisite
         return false;
     }
 
-    public void SetupNode(PrerequisiteNode node)
+    public void SetupNode(GoapNode node)
     {
         condition.SetupNode(node);
     }
@@ -80,7 +84,7 @@ public class Prerequisite
 public abstract class Effect
 {
     public abstract void DoEffect();
-    public abstract void SetupNode(ActionNode node);
+    public abstract void SetupNode(GoapNode node);
 }
 
 [Serializable]
@@ -90,5 +94,5 @@ public abstract class Condition
     {
         return false;
     }
-    public abstract void SetupNode(PrerequisiteNode node);
+    public abstract void SetupNode(GoapNode node);
 }
